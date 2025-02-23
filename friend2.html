@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with Friend 2</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <!-- Sidebar with Link to Friend 2's Chat -->
+<div id="sidebar2" style="background-color: #333; color: #ffffff; width: 200px; height: 100vh; padding: 20px; position: fixed; left: 0; top: 0; z-index: 1000;">
+    <div id="sideulbox">
+        <ul style="list-style-type: none; padding: 0;">
+            <li id="active" style="margin-bottom: 20px;">
+                <a href="friend1.html" style="color: #ffffff; text-decoration: none; font-size: 18px;">
+                    <i class="fa fa-user"></i> Chat with Friend 2
+                </a>
+            </li>
+            <li style="margin-bottom: 20px;">
+                <a href="friend1.html" style="color: #ffffff; text-decoration: none; font-size: 18px;">
+                    <i class="fa fa-exchange"></i> Switch to Friend 1
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+    <div id="outerbox">
+        <!-- Chat Section -->
+        <div id="inner3">
+            <div id="inner3container">
+                <div id="chat-box" class="chatlogs"></div>
+            </div>
+            <div id="inner3footer">
+                <div id="inner3searchbox">
+                    <input type="text" id="message" placeholder="Type a message..." required>
+                    <i class="fa fa-paper-plane" id="send-message"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="inner3footer">
+        <div id="inner3searchbox" style="display: flex; align-items: center;">
+            <input type="text" id="message" placeholder="Type a message..." required style="flex: 1; padding: 10px; font-size: 16px;">
+            <i class="fa fa-paper-plane" id="send-message" style="font-size: 24px; color: #2ed573; cursor: pointer; margin-left: 10px;"></i>
+        </div>
+    </div>
+    
+    <script>
+        $(document).ready(function() {
+            // Load messages function
+            function loadMessages() {
+                $.ajax({
+                    url: 'load_message.php',
+                    data: { friend: 'friend2' }, // 
+                    success: function(data) {
+                        $('#chat-box').html(data);
+                        $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
+                    }
+                });
+            }
+    
+            // Send message function
+            function sendMessage() {
+                var message = $('#message').val();
+                if (message) {
+                    $.ajax({
+                        type: 'POST',
+                        url: 'save_message.php',
+                        data: { message: message, friend: 'friend2' }, // 
+                        success: function() {
+                            $('#message').val('');
+                            loadMessages();
+                        }
+                    });
+                }
+            }
+    
+            // Click on send icon
+            $('#send-message').on('click', sendMessage);
+    
+            // Press Enter to send message
+            $('#message').on('keypress', function(e) {
+                if (e.which === 13) { // Enter key code
+                    sendMessage();
+                    e.preventDefault(); // Prevent newline in the input
+                }
+            });
+    
+            // Initial load
+            loadMessages();
+        });
+    </script>
+    
+</body>
+</html>
